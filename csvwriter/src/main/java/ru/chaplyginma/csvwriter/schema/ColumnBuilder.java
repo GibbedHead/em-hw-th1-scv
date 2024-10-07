@@ -17,7 +17,7 @@ public class ColumnBuilder {
     private ColumnBuilder() {
     }
 
-    public static Column buildColumn(final Field field) throws IllegalCSVFieldType {
+    public static Column buildColumn(final Field field) {
         String name = field.getAnnotation(CSVField.class).name();
         field.setAccessible(true);
         return new Column(name, getFieldType(field), field);

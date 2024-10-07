@@ -9,7 +9,16 @@ import java.util.List;
 
 public class Main {
     public static void main(String[] args) throws IllegalAccessException {
+        List<Person> people = getPeople();
 
+        CSVSchema schema = new CSVSchema(Person.class);
+
+        CSVWriter writer = new CSVWriter(schema);
+
+        writer.write(people);
+    }
+
+    private static List<Person> getPeople() {
         Person person1 = new Person(
                 "FirstName1",
                 "LastName1",
@@ -37,14 +46,6 @@ public class Main {
                 new int[]{4, 5, 6}
         );
 
-        List<Person> people = List.of(person1, person2, person3);
-
-        CSVSchema schema = new CSVSchema(Person.class);
-
-        System.out.println(schema.getColumns());
-
-        CSVWriter writer = new CSVWriter(schema);
-
-        writer.write(people);
+        return List.of(person1, person2, person3);
     }
 }
