@@ -1,10 +1,7 @@
 package ru.chaplyginma.csvwriter.schema;
 
 public enum FieldType {
-    PRIMITIVE,
-    PRIMITIVE_WRAPPER,
-    PRIMITIVE_ARRAY,
-    PRIMITIVE_WRAPPER_ARRAY,
-    STRING,
-    STRING_ARRAY
+    PRIMITIVE_OR_STRING,
+    PRIMITIVE_OR_STRING_ARRAY,
+    PRIMITIVE_OR_STRING_COLLECTION
 }

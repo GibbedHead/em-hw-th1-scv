@@ -9,21 +9,30 @@ import java.util.Set;
 public class CSVSchema {
 
     private static final boolean DEFAULT_USE_HEADER = true;
-    private static final char DEFAULT_SEPARATOR = ',';
-    private static final char DEFAULT_COLLECTION_SEPARATOR = ';';
+    private static final String DEFAULT_SEPARATOR = ",";
+    private static final String DEFAULT_COLLECTION_SEPARATOR = ";";
+    private static final String DEFAULT_QUOTE_CHARACTER = "\"";
 
-    private final char separator;
-    private final char collectionSeparator;
     private final boolean useHeader;
+    private final String separator;
+    private final String collectionSeparator;
+    private final String quoteCharacter;
 
     private final Class<?> sourceObjectClass;
     private final LinkedHashSet<Column> columns = new LinkedHashSet<>();
 
-    public CSVSchema(Class<?> sourceObjectClass, boolean useHeader, char separator, char collectionSeparator) {
+    public CSVSchema(
+            Class<?> sourceObjectClass,
+            boolean useHeader,
+            String separator,
+            String collectionSeparator,
+            String quoteCharacter
+    ) {
         this.separator = separator;
         this.collectionSeparator = collectionSeparator;
         this.useHeader = useHeader;
         this.sourceObjectClass = sourceObjectClass;
+        this.quoteCharacter = quoteCharacter;
         makeSchema();
     }
 
@@ -32,7 +41,8 @@ public class CSVSchema {
                 sourceObjectClass,
                 DEFAULT_USE_HEADER,
                 DEFAULT_SEPARATOR,
-                DEFAULT_COLLECTION_SEPARATOR
+                DEFAULT_COLLECTION_SEPARATOR,
+                DEFAULT_QUOTE_CHARACTER
         );
     }
 
@@ -41,16 +51,18 @@ public class CSVSchema {
                 sourceObjectClass,
                 useHeader,
                 DEFAULT_SEPARATOR,
-                DEFAULT_COLLECTION_SEPARATOR
+                DEFAULT_COLLECTION_SEPARATOR,
+                DEFAULT_QUOTE_CHARACTER
         );
     }
 
-    public CSVSchema(Class<?> sourceObjectClass, boolean useHeader, char separator) {
+    public CSVSchema(Class<?> sourceObjectClass, boolean useHeader, String separator) {
         this(
                 sourceObjectClass,
                 useHeader,
                 separator,
-                DEFAULT_COLLECTION_SEPARATOR
+                DEFAULT_COLLECTION_SEPARATOR,
+                DEFAULT_QUOTE_CHARACTER
         );
     }
 
@@ -63,11 +75,11 @@ public class CSVSchema {
         }
     }
 
-    public char getSeparator() {
+    public String getSeparator() {
         return separator;
     }
 
-    public char getCollectionSeparator() {
+    public String getCollectionSeparator() {
         return collectionSeparator;
     }
 
@@ -81,5 +93,9 @@ public class CSVSchema {
 
     public Set<Column> getColumns() {
         return columns;
+    }
+
+    public String getQuoteCharacter() {
+        return quoteCharacter;
     }
 }
