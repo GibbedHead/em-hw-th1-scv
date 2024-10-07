@@ -83,9 +83,13 @@ public class CSVWriter {
     }
 
     private String escape(String string) {
-        String escapedString = string.replace(schema.getQuoteCharacter(), String.format("%s%s", schema.getQuoteCharacter(), schema.getQuoteCharacter()));
+        String quoteChar = schema.getQuoteCharacter();
+        if (quoteChar.equals(string)) {
+            return String.format("%s%s%s%s", quoteChar, quoteChar, quoteChar, quoteChar);
+        }
+        String escapedString = string.replace(quoteChar, String.format("%s%s", quoteChar, quoteChar));
         if (escapedString.contains(schema.getSeparator()) || escapedString.contains(schema.getCollectionSeparator())) {
-            escapedString = String.format("%s%s%s", schema.getQuoteCharacter(), escapedString, schema.getQuoteCharacter());
+            escapedString = String.format("%s%s%s", quoteChar, escapedString, quoteChar);
         }
         return escapedString;
     }

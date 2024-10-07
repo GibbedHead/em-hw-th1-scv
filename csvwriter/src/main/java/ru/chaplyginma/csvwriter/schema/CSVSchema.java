@@ -21,7 +21,7 @@ public class CSVSchema {
     private final Class<?> sourceObjectClass;
     private final LinkedHashSet<Column> columns = new LinkedHashSet<>();
 
-    public CSVSchema(
+    private CSVSchema(
             Class<?> sourceObjectClass,
             boolean useHeader,
             String separator,
@@ -36,34 +36,8 @@ public class CSVSchema {
         makeSchema();
     }
 
-    public CSVSchema(Class<?> sourceObjectClass) {
-        this(
-                sourceObjectClass,
-                DEFAULT_USE_HEADER,
-                DEFAULT_SEPARATOR,
-                DEFAULT_COLLECTION_SEPARATOR,
-                DEFAULT_QUOTE_CHARACTER
-        );
-    }
-
-    public CSVSchema(Class<?> sourceObjectClass, boolean useHeader) {
-        this(
-                sourceObjectClass,
-                useHeader,
-                DEFAULT_SEPARATOR,
-                DEFAULT_COLLECTION_SEPARATOR,
-                DEFAULT_QUOTE_CHARACTER
-        );
-    }
-
-    public CSVSchema(Class<?> sourceObjectClass, boolean useHeader, String separator) {
-        this(
-                sourceObjectClass,
-                useHeader,
-                separator,
-                DEFAULT_COLLECTION_SEPARATOR,
-                DEFAULT_QUOTE_CHARACTER
-        );
+    public static CSVSchemaBuilder forClass(Class<?> sourceObjectClass) {
+        return new CSVSchemaBuilder(sourceObjectClass);
     }
 
     private void makeSchema() {
@@ -97,5 +71,47 @@ public class CSVSchema {
 
     public String getQuoteCharacter() {
         return quoteCharacter;
+    }
+
+    public static class CSVSchemaBuilder {
+        private final Class<?> sourceObjectClass;
+        private boolean useHeader = DEFAULT_USE_HEADER;
+        private String separator = DEFAULT_SEPARATOR;
+        private String collectionSeparator = DEFAULT_COLLECTION_SEPARATOR;
+        private String quoteCharacter = DEFAULT_QUOTE_CHARACTER;
+
+        public CSVSchemaBuilder(Class<?> sourceObjectClass) {
+            this.sourceObjectClass = sourceObjectClass;
+        }
+
+        public CSVSchemaBuilder useHeader(boolean useHeader) {
+            this.useHeader = useHeader;
+            return this;
+        }
+
+        public CSVSchemaBuilder separator(String separator) {
+            this.separator = separator;
+            return this;
+        }
+
+        public CSVSchemaBuilder collectionSeparator(String collectionSeparator) {
+            this.collectionSeparator = collectionSeparator;
+            return this;
+        }
+
+        public CSVSchemaBuilder quoteCharacter(String quoteCharacter) {
+            this.quoteCharacter = quoteCharacter;
+            return this;
+        }
+
+        public CSVSchema build() {
+            return new CSVSchema(
+                    sourceObjectClass,
+                    useHeader,
+                    separator,
+                    collectionSeparator,
+                    quoteCharacter
+            );
+        }
     }
 }

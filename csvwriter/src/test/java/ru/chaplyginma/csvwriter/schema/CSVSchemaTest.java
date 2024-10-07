@@ -13,7 +13,8 @@ class CSVSchemaTest {
     @Test
     @DisplayName("Test creating schema for valid annotated object")
     void givenValidAnnotatedObject_whenConstructSchema_thenSchemaCreated() {
-        CSVSchema schema = new CSVSchema(ValidAnnotatedClass.class);
+        CSVSchema schema = CSVSchema.forClass(ValidAnnotatedClass.class)
+                .build();
 
         assertThat(schema).isNotNull();
         assertThat(schema.getSeparator()).isEqualTo(",");
@@ -24,7 +25,8 @@ class CSVSchemaTest {
     @DisplayName("Test creating schema for invalid annotated object")
     void givenInvalidAnnotatedObject_whenConstructSchema_thenThrowsIllegalCSVFieldTypeException() {
         assertThatThrownBy(
-                () -> new CSVSchema(InvalidAnnotatedClass.class)
+                () -> CSVSchema.forClass(InvalidAnnotatedClass.class)
+                        .build()
         )
                 .isInstanceOf(IllegalArgumentException.class);
     }

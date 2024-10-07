@@ -11,7 +11,8 @@ public class Main {
     public static void main(String[] args) throws IllegalAccessException {
         List<Person> people = getPeople();
 
-        CSVSchema schema = new CSVSchema(Person.class);
+        CSVSchema schema = CSVSchema.forClass(Person.class)
+                .build();
 
         CSVWriter writer = new CSVWriter(schema);
 
