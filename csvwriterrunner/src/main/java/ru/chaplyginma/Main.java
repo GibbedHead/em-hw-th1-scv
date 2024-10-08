@@ -1,5 +1,7 @@
 package ru.chaplyginma;
 
+import ru.chaplyginma.csvwriter.escaper.CSVEscaper;
+import ru.chaplyginma.csvwriter.generator.CSVGenerator;
 import ru.chaplyginma.csvwriter.schema.CSVSchema;
 import ru.chaplyginma.csvwriter.writer.CSVWriter;
 import ru.chaplyginma.domain.Address;
@@ -12,7 +14,11 @@ public class Main {
     public static void main(String[] args) throws IOException, IllegalAccessException {
         CSVSchema schema = CSVSchema.forClass(Person.class)
                 .build();
-        CSVWriter<Person> writer = new CSVWriter<>(schema);
+
+        CSVEscaper csvEscaper = new CSVEscaper(schema);
+        CSVGenerator<Person> generator = new CSVGenerator<>(schema, csvEscaper);
+
+        CSVWriter<Person> writer = new CSVWriter<>(generator);
 
         List<Person> people = getPeople();
         writer.write(people, "csv/people.csv");
