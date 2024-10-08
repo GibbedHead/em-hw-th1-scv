@@ -17,12 +17,13 @@ mvn test;
 ### Тестовый проект, использующий основной модуль
 
 ```bash
-cd em-hw-th1-csv/csvwriter;
 mvn clean install;
 cd ../csvwriterrunner;
 mvn clean package;
 java -jar target/csvwriterrunner-1.0-SNAPSHOT.jar;
 ```
+
+После запуска тестового проекта в папке проекта создастся файл [people.csv](csvwriterrunner%2Fcsv%2Fpeople.csv)
 
 ## Детали решения
 
