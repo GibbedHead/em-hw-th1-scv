@@ -10,6 +10,13 @@ import java.lang.reflect.Array;
 import java.util.Collection;
 import java.util.Iterator;
 
+/**
+ * The {@code CSVGenerator} class is responsible for generating CSV-formatted strings
+ * from a collection of objects based on a provided schema. It utilizes a schema to
+ * define the structure of the CSV and an escaper utility to handle special characters.
+ *
+ * @param <T> the type of objects contained in the collection
+ */
 public class CSVGenerator<T> {
 
     private final CSVSchema schema;
@@ -20,6 +27,13 @@ public class CSVGenerator<T> {
         this.escaper = escaper;
     }
 
+    /**
+     * Generates a CSV-formatted string from the provided collection of objects.
+     *
+     * @param collection the collection of objects to be converted to CSV format
+     * @return a string representing the CSV data
+     * @throws IllegalAccessException if an attempt to access a field fails
+     */
     public String getCSV(Collection<T> collection) throws IllegalAccessException {
         StringBuilder builder = new StringBuilder();
 

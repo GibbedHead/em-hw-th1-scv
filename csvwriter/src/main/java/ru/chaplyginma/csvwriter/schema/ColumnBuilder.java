@@ -10,6 +10,11 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * The {@code ColumnBuilder} class is responsible for creating {@link Column} objects
+ * from fields annotated with {@link CSVField}. It checks the type of the field to ensure
+ * it is compatible with CSV serialization.
+ */
 public class ColumnBuilder {
 
     private static final Set<Class<?>> WRAPPER_CLASSES = new HashSet<>(Set.of(Integer.class, Double.class, Boolean.class, Character.class, Long.class, Short.class, Byte.class, Float.class));
@@ -17,12 +22,26 @@ public class ColumnBuilder {
     private ColumnBuilder() {
     }
 
+    /**
+     * Builds a {@link Column} object from the specified field.
+     *
+     * @param field the field annotated with {@link CSVField}
+     * @return a {@link Column} object representing the given field
+     * @throws IllegalCSVFieldType if the field's type is not supported for CSV serialization
+     */
     public static Column buildColumn(final Field field) {
         String name = field.getAnnotation(CSVField.class).name();
         field.setAccessible(true);
         return new Column(name, getFieldType(field), field);
     }
 
+    /**
+     * Determines the type of the given field and returns its corresponding {@link FieldType}.
+     *
+     * @param field the field whose type is to be determined
+     * @return the {@link FieldType} corresponding to the field's type
+     * @throws IllegalCSVFieldType if the field's type is not supported for CSV serialization
+     */
     private static FieldType getFieldType(final Field field) {
         Class<?> type = field.getType();
         if (isPrimitiveOrWrapperOrString(type)) {

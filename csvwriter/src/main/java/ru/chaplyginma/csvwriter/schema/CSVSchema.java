@@ -6,6 +6,13 @@ import java.lang.reflect.Field;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+/**
+ * The {@code CSVSchema} class defines the structure of a CSV file, including
+ * configurations such as separators, quote characters, and whether to use headers.
+ * It also provides functionality to build a schema based on the fields of a
+ * specified source object class annotated with {@code CSVField}.
+ */
+
 public class CSVSchema {
 
     private static final boolean DEFAULT_USE_HEADER = true;
@@ -40,6 +47,13 @@ public class CSVSchema {
         makeSchema();
     }
 
+    /**
+     * Returns a builder instance for constructing a {@code CSVSchema}.
+     *
+     * @param sourceObjectClass the class of the source object for which
+     *                          the schema is being built.
+     * @return a new instance of {@code CSVSchemaBuilder}.
+     */
     public static CSVSchemaBuilder forClass(Class<?> sourceObjectClass) {
         return new CSVSchemaBuilder(sourceObjectClass);
     }
@@ -81,6 +95,11 @@ public class CSVSchema {
         return nullValueString;
     }
 
+    /**
+     * The {@code CSVSchemaBuilder} is a builder class for constructing
+     * instances of {@code CSVSchema}. It allows for a fluent interface
+     * to set various properties of the schema before building it.
+     */
     public static class CSVSchemaBuilder {
         private final Class<?> sourceObjectClass;
         private boolean useHeader = DEFAULT_USE_HEADER;

@@ -7,8 +7,22 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
+/**
+ * The {@code CSVFileWriter} class is responsible for writing CSV data to a specified file.
+ * It provides methods to create directories if they do not exist and to write the CSV content
+ * to a file.
+ */
 public class CSVFileWriter {
 
+    /**
+     * Writes the given CSV content to a file at the specified path.
+     *
+     * @param path the path of the file where the CSV content will be written
+     * @param csv  the CSV content to be written to the file
+     * @throws IOException            if an I/O error occurs during writing or if the directory cannot be created
+     *                                when it does not exist
+     * @throws CreateSaveDirException if unable to create the parent directory for the specified file
+     */
     public void writeCsv(String path, String csv) throws IOException {
         File file = new File(path);
 
