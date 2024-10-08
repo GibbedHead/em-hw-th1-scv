@@ -40,3 +40,4 @@ build/
 .docs
 .idea
 csv
+dependency-reduced-pom.xml
