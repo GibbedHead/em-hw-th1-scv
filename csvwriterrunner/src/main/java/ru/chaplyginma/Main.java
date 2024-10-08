@@ -1,6 +1,7 @@
 package ru.chaplyginma;
 
 import ru.chaplyginma.csvwriter.escaper.CSVEscaper;
+import ru.chaplyginma.csvwriter.file.CSVFileWriter;
 import ru.chaplyginma.csvwriter.generator.CSVGenerator;
 import ru.chaplyginma.csvwriter.schema.CSVSchema;
 import ru.chaplyginma.csvwriter.writer.CSVWriter;
@@ -17,8 +18,9 @@ public class Main {
 
         CSVEscaper csvEscaper = new CSVEscaper(schema);
         CSVGenerator<Person> generator = new CSVGenerator<>(schema, csvEscaper);
+        CSVFileWriter fileWriter = new CSVFileWriter();
 
-        CSVWriter<Person> writer = new CSVWriter<>(generator);
+        CSVWriter<Person> writer = new CSVWriter<>(generator, fileWriter);
 
         List<Person> people = getPeople();
         writer.write(people, "csv/people.csv");
