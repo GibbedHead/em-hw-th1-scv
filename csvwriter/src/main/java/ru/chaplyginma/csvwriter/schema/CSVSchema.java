@@ -12,11 +12,13 @@ public class CSVSchema {
     private static final String DEFAULT_SEPARATOR = ",";
     private static final String DEFAULT_COLLECTION_SEPARATOR = ";";
     private static final String DEFAULT_QUOTE_CHARACTER = "\"";
+    private static final String DEFAULT_NULL_VALUE_STRING = "";
 
     private final boolean useHeader;
     private final String separator;
     private final String collectionSeparator;
     private final String quoteCharacter;
+    private final String nullValueString;
 
     private final Class<?> sourceObjectClass;
     private final LinkedHashSet<Column> columns = new LinkedHashSet<>();
@@ -26,13 +28,15 @@ public class CSVSchema {
             boolean useHeader,
             String separator,
             String collectionSeparator,
-            String quoteCharacter
+            String quoteCharacter,
+            String nullValueString
     ) {
         this.separator = separator;
         this.collectionSeparator = collectionSeparator;
         this.useHeader = useHeader;
         this.sourceObjectClass = sourceObjectClass;
         this.quoteCharacter = quoteCharacter;
+        this.nullValueString = nullValueString;
         makeSchema();
     }
 
@@ -73,12 +77,17 @@ public class CSVSchema {
         return quoteCharacter;
     }
 
+    public String getNullValueString() {
+        return nullValueString;
+    }
+
     public static class CSVSchemaBuilder {
         private final Class<?> sourceObjectClass;
         private boolean useHeader = DEFAULT_USE_HEADER;
         private String separator = DEFAULT_SEPARATOR;
         private String collectionSeparator = DEFAULT_COLLECTION_SEPARATOR;
         private String quoteCharacter = DEFAULT_QUOTE_CHARACTER;
+        private String nullValueString = DEFAULT_NULL_VALUE_STRING;
 
         public CSVSchemaBuilder(Class<?> sourceObjectClass) {
             this.sourceObjectClass = sourceObjectClass;
@@ -104,13 +113,19 @@ public class CSVSchema {
             return this;
         }
 
+        public CSVSchemaBuilder nullValueString(String nullValueString) {
+            this.nullValueString = nullValueString;
+            return this;
+        }
+
         public CSVSchema build() {
             return new CSVSchema(
                     sourceObjectClass,
                     useHeader,
                     separator,
                     collectionSeparator,
-                    quoteCharacter
+                    quoteCharacter,
+                    nullValueString
             );
         }
     }
