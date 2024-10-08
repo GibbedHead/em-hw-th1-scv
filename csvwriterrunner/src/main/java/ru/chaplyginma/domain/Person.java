@@ -32,4 +32,17 @@ public record Person(
         public int hashCode() {
                 return Objects.hash(firstName, lastName, age, address, workPlaces, Arrays.hashCode(nums), Arrays.hashCode(doubles));
         }
+
+        @Override
+        public String toString() {
+                return "Person{" +
+                        "firstName='" + firstName + '\'' +
+                        ", lastName='" + lastName + '\'' +
+                        ", age=" + age +
+                        ", address=" + address +
+                        ", workPlaces=" + workPlaces +
+                        ", nums=" + Arrays.toString(nums) +
+                        ", doubles=" + Arrays.toString(doubles) +
+                        '}';
+        }
 }

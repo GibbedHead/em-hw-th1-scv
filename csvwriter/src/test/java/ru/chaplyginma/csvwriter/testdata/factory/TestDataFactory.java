@@ -3,10 +3,7 @@ package ru.chaplyginma.csvwriter.testdata.factory;
 import ru.chaplyginma.csvwriter.testdata.domain.InvalidAnnotatedClass;
 import ru.chaplyginma.csvwriter.testdata.domain.ValidAnnotatedClass;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class TestDataFactory {
 
@@ -42,7 +39,7 @@ public class TestDataFactory {
 
     public static List<ValidAnnotatedClass> createValidAnnotatedClassObjectList() {
         List<ValidAnnotatedClass> validAnnotatedClassList = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
+        for (int i = 1; i <= 3; i++) {
             validAnnotatedClassList.add(TestDataFactory.createIthValidAnnotatedClassObject(i));
         }
         return validAnnotatedClassList;
@@ -62,7 +59,7 @@ public class TestDataFactory {
                         String.format("%d'th String with (\") double quote", counter)
                 )
         );
-        validAnnotatedClass.setIntegerSetField(Set.of(100 * counter, 200 * counter, 300 * counter));
+        validAnnotatedClass.setIntegerSetField(new LinkedHashSet<>(List.of(100 * counter, 200 * counter, 300 * counter)));
         return validAnnotatedClass;
     }
 }

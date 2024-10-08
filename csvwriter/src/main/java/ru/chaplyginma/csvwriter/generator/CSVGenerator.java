@@ -77,6 +77,9 @@ public class CSVGenerator<T> {
     }
 
     private String getArrayString(Column column, Object object) throws IllegalAccessException {
+        if (column.field().get(object) == null) {
+            return schema.getNullValueString();
+        }
         StringBuilder builder = new StringBuilder();
         int length = Array.getLength(column.field().get(object));
         for (int i = 0; i < length; i++) {
@@ -92,6 +95,9 @@ public class CSVGenerator<T> {
     }
 
     private String getCollectionString(Column column, Object object) throws IllegalAccessException {
+        if (column.field().get(object) == null) {
+            return schema.getNullValueString();
+        }
         StringBuilder builder = new StringBuilder();
         Iterator<?> iterator = ((Collection<?>) column.field().get(object)).iterator();
         while (iterator.hasNext()) {
