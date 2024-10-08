@@ -21,28 +21,28 @@ public record Person(
         @CSVField(name = "Doubles")
         Double[] doubles
 ) {
-        @Override
-        public boolean equals(Object o) {
-                if (this == o) return true;
-                if (!(o instanceof Person person)) return false;
-            return age == person.age && Objects.deepEquals(nums, person.nums) && Objects.equals(lastName, person.lastName) && Objects.equals(address, person.address) && Objects.equals(firstName, person.firstName) && Objects.deepEquals(doubles, person.doubles) && Objects.equals(workPlaces, person.workPlaces);
-        }
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Person person)) return false;
+        return age == person.age && Objects.deepEquals(nums, person.nums) && Objects.equals(lastName, person.lastName) && Objects.equals(address, person.address) && Objects.equals(firstName, person.firstName) && Objects.deepEquals(doubles, person.doubles) && Objects.equals(workPlaces, person.workPlaces);
+    }
 
-        @Override
-        public int hashCode() {
-                return Objects.hash(firstName, lastName, age, address, workPlaces, Arrays.hashCode(nums), Arrays.hashCode(doubles));
-        }
+    @Override
+    public int hashCode() {
+        return Objects.hash(firstName, lastName, age, address, workPlaces, Arrays.hashCode(nums), Arrays.hashCode(doubles));
+    }
 
-        @Override
-        public String toString() {
-                return "Person{" +
-                        "firstName='" + firstName + '\'' +
-                        ", lastName='" + lastName + '\'' +
-                        ", age=" + age +
-                        ", address=" + address +
-                        ", workPlaces=" + workPlaces +
-                        ", nums=" + Arrays.toString(nums) +
-                        ", doubles=" + Arrays.toString(doubles) +
-                        '}';
-        }
+    @Override
+    public String toString() {
+        return "Person{" +
+                "firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", age=" + age +
+                ", address=" + address +
+                ", workPlaces=" + workPlaces +
+                ", nums=" + Arrays.toString(nums) +
+                ", doubles=" + Arrays.toString(doubles) +
+                '}';
+    }
 }
