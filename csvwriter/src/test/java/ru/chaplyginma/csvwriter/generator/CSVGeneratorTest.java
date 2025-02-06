@@ -15,7 +15,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class CSVGeneratorTest {
 
-    private CSVGenerator<ValidAnnotatedClass> generator;
+    private CSVGenerator generator;
     private CSVEscaper escaper;
 
     @BeforeEach
@@ -27,7 +27,7 @@ class CSVGeneratorTest {
                 .quoteCharacter("\"")
                 .build();
         escaper = new CSVEscaper(schema);
-        generator = new CSVGenerator<>(schema, escaper);
+        generator = new CSVGenerator(schema, escaper);
     }
 
     @Test
@@ -58,7 +58,7 @@ class CSVGeneratorTest {
                 .collectionSeparator(";")
                 .quoteCharacter("\"")
                 .build();
-        generator = new CSVGenerator<>(schemaWithoutHeader, escaper);
+        generator = new CSVGenerator(schemaWithoutHeader, escaper);
 
         assertThat(generator.getCSV(TestDataFactory.createValidAnnotatedClassObjectList())).isEqualTo(expected);
     }

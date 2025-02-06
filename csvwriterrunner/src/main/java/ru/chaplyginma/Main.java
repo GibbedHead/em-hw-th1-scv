@@ -1,31 +1,24 @@
 package ru.chaplyginma;
 
-import ru.chaplyginma.csvwriter.escaper.CSVEscaper;
-import ru.chaplyginma.csvwriter.exception.CreateSaveDirException;
-import ru.chaplyginma.csvwriter.exception.FieldValueAccessException;
-import ru.chaplyginma.csvwriter.file.CSVFileWriter;
-import ru.chaplyginma.csvwriter.generator.CSVGenerator;
-import ru.chaplyginma.csvwriter.schema.CSVSchema;
+import ru.chaplyginma.csvwriter.exception.CSVWriterException;
 import ru.chaplyginma.csvwriter.writer.CSVWriter;
 import ru.chaplyginma.domain.Address;
 import ru.chaplyginma.domain.Person;
 
-import java.io.IOException;
 import java.util.List;
+import java.util.logging.Logger;
 
 public class Main {
-    public static void main(String[] args) throws IOException, CreateSaveDirException, FieldValueAccessException {
-        CSVSchema schema = CSVSchema.forClass(Person.class)
-                .build();
-
-        CSVEscaper csvEscaper = new CSVEscaper(schema);
-        CSVGenerator<Person> generator = new CSVGenerator<>(schema, csvEscaper);
-        CSVFileWriter fileWriter = new CSVFileWriter();
-
-        CSVWriter<Person> writer = new CSVWriter<>(generator, fileWriter);
-
+    public static void main(String[] args) {
         List<Person> people = getPeople();
-        writer.write(people, "csv/people.csv");
+
+        try {
+            CSVWriter csvWriter = CSVWriter.forCollection(people);
+            csvWriter.write("csv/people.csv");
+        } catch (CSVWriterException e) {
+            Logger log = Logger.getLogger(Main.class.getName());
+            log.severe(e.getMessage());
+        }
     }
 
     private static List<Person> getPeople() {

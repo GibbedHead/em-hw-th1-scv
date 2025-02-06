@@ -2,6 +2,7 @@ package ru.chaplyginma.csvwriter.writer;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import ru.chaplyginma.csvwriter.exception.CSVWriterException;
 import ru.chaplyginma.csvwriter.exception.CreateSaveDirException;
 import ru.chaplyginma.csvwriter.exception.FieldValueAccessException;
 import ru.chaplyginma.csvwriter.file.CSVFileWriter;
@@ -17,33 +18,37 @@ import static org.mockito.Mockito.*;
 
 class CSVWriterTest {
 
-    private CSVGenerator<String> csvGeneratorMock;
+    private CSVGenerator csvGeneratorMock;
     private CSVFileWriter fileWriterMock;
-    private CSVWriter<String> csvWriter;
 
     @BeforeEach
     void setUp() {
         csvGeneratorMock = mock(CSVGenerator.class);
         fileWriterMock = mock(CSVFileWriter.class);
-        csvWriter = new CSVWriter<>(csvGeneratorMock, fileWriterMock);
     }
 
     @Test
-    void testWriteSuccess() throws IOException, FieldValueAccessException, CreateSaveDirException {
+    void testWriteSuccess() throws CSVWriterException, FieldValueAccessException, CreateSaveDirException, IOException {
         Collection<String> data = Arrays.asList("row1", "row2");
+
+        CSVWriter csvWriter = CSVWriter.testInstance(data, csvGeneratorMock, fileWriterMock);
+
         String expectedCsv = "row1,row2\n";
         String path = "test/output.csv";
 
         given(csvGeneratorMock.getCSV(data)).willReturn(expectedCsv);
 
-        csvWriter.write(data, path);
+        csvWriter.write(path);
 
         verify(fileWriterMock).writeCsv(path, expectedCsv);
     }
 
     @Test
-    void testWriteThrowsIOException() throws IOException, FieldValueAccessException, CreateSaveDirException {
+    void testWriteThrowsIOException() throws CSVWriterException, FieldValueAccessException, CreateSaveDirException, IOException {
         Collection<String> data = Arrays.asList("row1", "row2");
+
+        CSVWriter csvWriter = CSVWriter.testInstance(data, csvGeneratorMock, fileWriterMock);
+
         String path = "test/output.csv";
         String expectedCsv = "row1,row2\n";
 
@@ -51,14 +56,17 @@ class CSVWriterTest {
 
         doThrow(new IOException("File error")).when(fileWriterMock).writeCsv(path, expectedCsv);
 
-        assertThatThrownBy(() -> csvWriter.write(data, path))
-                .isInstanceOf(IOException.class)
+        assertThatThrownBy(() -> csvWriter.write(path))
+                .isInstanceOf(CSVWriterException.class)
                 .hasMessage("File error");
     }
 
     @Test
     void testWriteThrowsCreateSaveDirException() throws Exception {
         Collection<String> data = Arrays.asList("row1", "row2");
+
+        CSVWriter csvWriter = CSVWriter.testInstance(data, csvGeneratorMock, fileWriterMock);
+
         String expectedCsv = "row1,row2\n";
         String path = "invalid/path/output.csv";
 
@@ -66,8 +74,8 @@ class CSVWriterTest {
 
         doThrow(new CreateSaveDirException("Unable to create directory")).when(fileWriterMock).writeCsv(anyString(), anyString());
 
-        assertThatThrownBy(() -> csvWriter.write(data, path))
-                .isInstanceOf(CreateSaveDirException.class)
+        assertThatThrownBy(() -> csvWriter.write(path))
+                .isInstanceOf(CSVWriterException.class)
                 .hasMessage("Unable to create directory");
     }
 }
