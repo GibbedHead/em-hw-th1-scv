@@ -1,5 +1,8 @@
 package ru.chaplyginma.csvwriter.writer;
 
+import ru.chaplyginma.csvwriter.exception.CreateSaveDirException;
+import ru.chaplyginma.csvwriter.exception.FieldValueAccessException;
+import ru.chaplyginma.csvwriter.exception.IllegalCSVFieldType;
 import ru.chaplyginma.csvwriter.file.CSVFileWriter;
 import ru.chaplyginma.csvwriter.generator.CSVGenerator;
 
@@ -27,10 +30,13 @@ public class CSVWriter<T> {
      *
      * @param collection the collection of objects to be converted to CSV format
      * @param path       the path of the file where the CSV content will be written
-     * @throws IOException            if an I/O error occurs during writing to the file
-     * @throws IllegalAccessException if an attempt to access a field fails while generating CSV
+     * @throws IOException               if an I/O error occurs during writing to the file
+     * @throws FieldValueAccessException if an attempt to access a field fails while generating CSV
+     * @throws CreateSaveDirException    if unable to create the parent directory for the specified file
+     * @throws IllegalCSVFieldType       if the field's type is not supported for CSV serialization
      */
-    public void write(Collection<T> collection, String path) throws IOException, IllegalAccessException {
+    public void write(Collection<T> collection, String path)
+            throws IOException, FieldValueAccessException, CreateSaveDirException, IllegalCSVFieldType {
         String csv = csvGenerator.getCSV(collection);
 
         fileWriter.writeCsv(path, csv);

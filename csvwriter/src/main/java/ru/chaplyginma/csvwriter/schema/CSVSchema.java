@@ -1,6 +1,7 @@
 package ru.chaplyginma.csvwriter.schema;
 
 import ru.chaplyginma.csvwriter.annotation.CSVField;
+import ru.chaplyginma.csvwriter.exception.IllegalCSVFieldType;
 
 import java.lang.reflect.Field;
 import java.util.LinkedHashSet;
@@ -37,7 +38,7 @@ public class CSVSchema {
             String collectionSeparator,
             String quoteCharacter,
             String nullValueString
-    ) {
+    ) throws IllegalCSVFieldType {
         this.separator = separator;
         this.collectionSeparator = collectionSeparator;
         this.useHeader = useHeader;
@@ -58,7 +59,7 @@ public class CSVSchema {
         return new CSVSchemaBuilder(sourceObjectClass);
     }
 
-    private void makeSchema() {
+    private void makeSchema() throws IllegalCSVFieldType {
         Field[] fields = sourceObjectClass.getDeclaredFields();
         for (Field field : fields) {
             if (field.isAnnotationPresent(CSVField.class)) {

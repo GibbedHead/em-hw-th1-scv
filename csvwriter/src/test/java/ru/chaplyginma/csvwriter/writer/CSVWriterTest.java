@@ -3,6 +3,7 @@ package ru.chaplyginma.csvwriter.writer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.chaplyginma.csvwriter.exception.CreateSaveDirException;
+import ru.chaplyginma.csvwriter.exception.FieldValueAccessException;
 import ru.chaplyginma.csvwriter.file.CSVFileWriter;
 import ru.chaplyginma.csvwriter.generator.CSVGenerator;
 
@@ -28,7 +29,7 @@ class CSVWriterTest {
     }
 
     @Test
-    void testWriteSuccess() throws IOException, IllegalAccessException {
+    void testWriteSuccess() throws IOException, FieldValueAccessException, CreateSaveDirException {
         Collection<String> data = Arrays.asList("row1", "row2");
         String expectedCsv = "row1,row2\n";
         String path = "test/output.csv";
@@ -41,7 +42,7 @@ class CSVWriterTest {
     }
 
     @Test
-    void testWriteThrowsIOException() throws IOException, IllegalAccessException {
+    void testWriteThrowsIOException() throws IOException, FieldValueAccessException, CreateSaveDirException {
         Collection<String> data = Arrays.asList("row1", "row2");
         String path = "test/output.csv";
         String expectedCsv = "row1,row2\n";

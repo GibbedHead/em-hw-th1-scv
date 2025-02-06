@@ -1,6 +1,8 @@
 package ru.chaplyginma;
 
 import ru.chaplyginma.csvwriter.escaper.CSVEscaper;
+import ru.chaplyginma.csvwriter.exception.CreateSaveDirException;
+import ru.chaplyginma.csvwriter.exception.FieldValueAccessException;
 import ru.chaplyginma.csvwriter.file.CSVFileWriter;
 import ru.chaplyginma.csvwriter.generator.CSVGenerator;
 import ru.chaplyginma.csvwriter.schema.CSVSchema;
@@ -12,7 +14,7 @@ import java.io.IOException;
 import java.util.List;
 
 public class Main {
-    public static void main(String[] args) throws IOException, IllegalAccessException {
+    public static void main(String[] args) throws IOException, CreateSaveDirException, FieldValueAccessException {
         CSVSchema schema = CSVSchema.forClass(Person.class)
                 .build();
 
