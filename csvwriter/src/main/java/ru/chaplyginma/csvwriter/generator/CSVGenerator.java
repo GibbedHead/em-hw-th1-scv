@@ -1,6 +1,7 @@
 package ru.chaplyginma.csvwriter.generator;
 
 import ru.chaplyginma.csvwriter.escaper.CSVEscaper;
+import ru.chaplyginma.csvwriter.exception.FieldValueAccessException;
 import ru.chaplyginma.csvwriter.exception.IllegalCSVFieldType;
 import ru.chaplyginma.csvwriter.schema.CSVSchema;
 import ru.chaplyginma.csvwriter.schema.Column;
@@ -14,10 +15,8 @@ import java.util.Iterator;
  * The {@code CSVGenerator} class is responsible for generating CSV-formatted strings
  * from a collection of objects based on a provided schema. It utilizes a schema to
  * define the structure of the CSV and an escaper utility to handle special characters.
- *
- * @param <T> the type of objects contained in the collection
  */
-public class CSVGenerator<T> {
+public class CSVGenerator {
 
     private final CSVSchema schema;
     private final CSVEscaper escaper;
@@ -32,9 +31,10 @@ public class CSVGenerator<T> {
      *
      * @param collection the collection of objects to be converted to CSV format
      * @return a string representing the CSV data
-     * @throws IllegalAccessException if an attempt to access a field fails
+     * @throws FieldValueAccessException if an attempt to access a field fails
+     * @throws IllegalCSVFieldType       if the field's type is not supported for CSV serialization
      */
-    public String getCSV(Collection<T> collection) throws IllegalAccessException {
+    public String getCSV(Collection<?> collection) throws FieldValueAccessException, IllegalCSVFieldType {
         StringBuilder builder = new StringBuilder();
 
         if (schema.isUseHeader()) {
@@ -59,7 +59,7 @@ public class CSVGenerator<T> {
         builder.append('\n');
     }
 
-    private String getRowString(Object object) throws IllegalAccessException {
+    private String getRowString(Object object) throws FieldValueAccessException, IllegalCSVFieldType {
         StringBuilder row = new StringBuilder();
 
         Iterator<Column> columnIterator = schema.getColumns().iterator();
@@ -77,7 +77,7 @@ public class CSVGenerator<T> {
         return row.toString();
     }
 
-    private String getColumnString(Column column, Object object) throws IllegalAccessException {
+    private String getColumnString(Column column, Object object) throws FieldValueAccessException, IllegalCSVFieldType {
         if (column.type() == FieldType.PRIMITIVE_OR_STRING) {
             return getPrimitiveString(column, object);
         }
@@ -90,14 +90,15 @@ public class CSVGenerator<T> {
         throw new IllegalCSVFieldType("Unsupported field type: " + column.type());
     }
 
-    private String getArrayString(Column column, Object object) throws IllegalAccessException {
-        if (column.field().get(object) == null) {
+    private String getArrayString(Column column, Object object) throws FieldValueAccessException {
+        Object fieldValue = getFieldValue(column, object);
+        if (fieldValue == null) {
             return schema.getNullValueString();
         }
         StringBuilder builder = new StringBuilder();
-        int length = Array.getLength(column.field().get(object));
+        int length = Array.getLength(fieldValue);
         for (int i = 0; i < length; i++) {
-            Object element = Array.get(column.field().get(object), i);
+            Object element = Array.get(fieldValue, i);
             String elementString = element == null ? schema.getNullValueString() : String.valueOf(element);
             builder.append(elementString);
 
@@ -108,12 +109,13 @@ public class CSVGenerator<T> {
         return escaper.escape(builder.toString());
     }
 
-    private String getCollectionString(Column column, Object object) throws IllegalAccessException {
-        if (column.field().get(object) == null) {
+    private String getCollectionString(Column column, Object object) throws FieldValueAccessException {
+        Object fieldValue = getFieldValue(column, object);
+        if (fieldValue == null) {
             return schema.getNullValueString();
         }
         StringBuilder builder = new StringBuilder();
-        Iterator<?> iterator = ((Collection<?>) column.field().get(object)).iterator();
+        Iterator<?> iterator = ((Collection<?>) fieldValue).iterator();
         while (iterator.hasNext()) {
             Object element = iterator.next();
             String elementString = element == null ? schema.getNullValueString() : String.valueOf(element);
@@ -125,8 +127,18 @@ public class CSVGenerator<T> {
         return escaper.escape(builder.toString());
     }
 
-    private String getPrimitiveString(Column column, Object object) throws IllegalAccessException {
-        Object value = column.field().get(object);
-        return value == null ? schema.getNullValueString() : escaper.escape(String.valueOf(value));
+    private String getPrimitiveString(Column column, Object object) throws FieldValueAccessException {
+        Object fieldValue = getFieldValue(column, object);
+        return fieldValue == null ? schema.getNullValueString() : escaper.escape(String.valueOf(fieldValue));
+    }
+
+    private static Object getFieldValue(Column column, Object object) throws FieldValueAccessException {
+        Object fieldValue;
+        try {
+            fieldValue = column.field().get(object);
+        } catch (IllegalAccessException e) {
+            throw new FieldValueAccessException("Can't read field value for: %s".formatted(column.name()));
+        }
+        return fieldValue;
     }
 }

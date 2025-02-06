@@ -19,11 +19,10 @@ public class CSVFileWriter {
      *
      * @param path the path of the file where the CSV content will be written
      * @param csv  the CSV content to be written to the file
-     * @throws IOException            if an I/O error occurs during writing or if the directory cannot be created
-     *                                when it does not exist
+     * @throws IOException            if an I/O error occurs during writing
      * @throws CreateSaveDirException if unable to create the parent directory for the specified file
      */
-    public void writeCsv(String path, String csv) throws IOException {
+    public void writeCsv(String path, String csv) throws IOException, CreateSaveDirException {
         File file = new File(path);
 
         if (!file.getParentFile().mkdirs() && !file.getParentFile().exists()) {

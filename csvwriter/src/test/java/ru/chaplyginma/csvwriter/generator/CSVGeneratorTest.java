@@ -4,6 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ru.chaplyginma.csvwriter.escaper.CSVEscaper;
+import ru.chaplyginma.csvwriter.exception.FieldValueAccessException;
 import ru.chaplyginma.csvwriter.schema.CSVSchema;
 import ru.chaplyginma.csvwriter.testdata.domain.ValidAnnotatedClass;
 import ru.chaplyginma.csvwriter.testdata.factory.TestDataFactory;
@@ -14,7 +15,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class CSVGeneratorTest {
 
-    private CSVGenerator<ValidAnnotatedClass> generator;
+    private CSVGenerator generator;
     private CSVEscaper escaper;
 
     @BeforeEach
@@ -26,12 +27,12 @@ class CSVGeneratorTest {
                 .quoteCharacter("\"")
                 .build();
         escaper = new CSVEscaper(schema);
-        generator = new CSVGenerator<>(schema, escaper);
+        generator = new CSVGenerator(schema, escaper);
     }
 
     @Test
     @DisplayName("Test use headers")
-    void givenSchemaWithHeaders_whenGetCSV_thenStringWithHeaders() throws IllegalAccessException {
+    void givenSchemaWithHeaders_whenGetCSV_thenStringWithHeaders() throws FieldValueAccessException {
         String expected = """
                 int,String,Long,Array of float,Array of Boolean,List of String,Set of Integer
                 1,1'th String with (|) pipe,10000000000,"11.0;22.0;33.0;44.0","true;false","1'th String with (,) coma;1'th String with (;) semicolon;1'th String with ("") double quote","100;200;300"
@@ -57,14 +58,14 @@ class CSVGeneratorTest {
                 .collectionSeparator(";")
                 .quoteCharacter("\"")
                 .build();
-        generator = new CSVGenerator<>(schemaWithoutHeader, escaper);
+        generator = new CSVGenerator(schemaWithoutHeader, escaper);
 
         assertThat(generator.getCSV(TestDataFactory.createValidAnnotatedClassObjectList())).isEqualTo(expected);
     }
 
     @Test
     @DisplayName("Test null values")
-    void givenNullValuesInObject_whenGetCSV_thenStringWithEmptyValueStringTemplate() throws IllegalAccessException {
+    void givenNullValuesInObject_whenGetCSV_thenStringWithEmptyValueStringTemplate() throws FieldValueAccessException {
         String expected = """
                 int,String,Long,Array of float,Array of Boolean,List of String,Set of Integer
                 1,,10000000000,,"true;false",,

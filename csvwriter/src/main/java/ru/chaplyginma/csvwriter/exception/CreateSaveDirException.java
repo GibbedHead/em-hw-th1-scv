@@ -1,8 +1,6 @@
 package ru.chaplyginma.csvwriter.exception;
 
-import java.io.IOException;
-
-public class CreateSaveDirException extends IOException {
+public class CreateSaveDirException extends Exception {
     public CreateSaveDirException(String message) {
         super(message);
     }

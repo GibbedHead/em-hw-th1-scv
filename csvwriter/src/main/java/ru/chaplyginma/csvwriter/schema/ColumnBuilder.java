@@ -29,7 +29,7 @@ public class ColumnBuilder {
      * @return a {@link Column} object representing the given field
      * @throws IllegalCSVFieldType if the field's type is not supported for CSV serialization
      */
-    public static Column buildColumn(final Field field) {
+    public static Column buildColumn(final Field field) throws IllegalCSVFieldType {
         String name = field.getAnnotation(CSVField.class).name();
         field.setAccessible(true);
         return new Column(name, getFieldType(field), field);
@@ -42,7 +42,7 @@ public class ColumnBuilder {
      * @return the {@link FieldType} corresponding to the field's type
      * @throws IllegalCSVFieldType if the field's type is not supported for CSV serialization
      */
-    private static FieldType getFieldType(final Field field) {
+    private static FieldType getFieldType(final Field field) throws IllegalCSVFieldType {
         Class<?> type = field.getType();
         if (isPrimitiveOrWrapperOrString(type)) {
             return FieldType.PRIMITIVE_OR_STRING;
